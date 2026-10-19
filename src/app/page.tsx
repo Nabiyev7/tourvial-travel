@@ -12,13 +12,11 @@ import { Testimonial } from "@/components/Testimonial";
 import { KarvonProvider } from "@/lib/store";
 
 /**
- * Today's date is resolved here rather than in the client store so the first
- * client render matches the server markup exactly. The short revalidate window
- * is what keeps the date picker's "today" from going stale on a statically
- * rendered page.
+ * Today's date is resolved here so the first client render matches the server
+ * markup exactly. It is only the opening value: the store re-reads the real
+ * date right after hydration, which is what lets this page be statically
+ * exported without the picker freezing on the build date.
  */
-export const revalidate = 600;
-
 function todayISO(): string {
   const now = new Date();
   const month = String(now.getMonth() + 1).padStart(2, "0");

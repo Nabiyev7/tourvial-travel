@@ -32,6 +32,27 @@ npm run typecheck    # tsc --noEmit
 npm run lint         # eslint
 ```
 
+## Deployment
+
+The site is live on GitHub Pages at
+**https://nabiyev7.github.io/tourvial-travel/**, published by
+`.github/workflows/deploy.yml` on every push to `main`. The workflow runs
+`typecheck` and `lint` first, so a broken build never reaches the live site.
+
+`next.config.ts` has two build modes:
+
+| Mode | How | What you get |
+| --- | --- | --- |
+| Default | `npm run build` | A normal Next.js app for a Node host (Vercel, Netlify, a container). `next/image` optimises the photography at request time. |
+| Static export | `NEXT_OUTPUT=export npm run build` | A fully static `out/` for a file host. Set `NEXT_BASE_PATH=/<repo>` when it is served from a sub-path, as GitHub Pages project sites are. |
+
+GitHub Pages has no image optimiser, so the export serves the photography
+as-is — one more reason to self-host and size the images (see below) rather
+than hotlinking 2000px originals.
+
+To deploy to Vercel or Netlify instead, import the repository and accept the
+detected Next.js defaults; the default build mode is what those hosts want.
+
 ## Project layout
 
 ```
@@ -131,5 +152,9 @@ practice.
   handoff specifies, but it does mean the hero loads six photographs up front —
   worth measuring once the images are self-hosted and properly sized.
 - The date picker spans 13 months from the current month. "Today" is resolved
-  on the server (`page.tsx`) so the first client render matches the markup
-  exactly; `revalidate = 600` keeps it from going stale.
+  on the server (`page.tsx`) only as the first snapshot, so the opening client
+  render matches the markup; the store then re-reads the real date through
+  `useSyncExternalStore` and again when the day rolls over. That is what lets
+  the page be statically exported without the picker freezing on the build
+  date. A selected day that falls out of range as the date moves on reverts to
+  the default rather than being corrected in an effect.

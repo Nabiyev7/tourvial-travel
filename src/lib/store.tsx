@@ -130,6 +130,51 @@ function subscribeToStoredCity(onChange: () => void): () => void {
   return () => window.removeEventListener("storage", handle);
 }
 
+/**
+ * The current date, also as an external store. The server (or, for a static
+ * export, the build) supplies the first value so hydration matches; the client
+ * then reads the real date and re-reads it again when the day rolls over. This
+ * is what keeps the picker honest on a page that was built days ago.
+ */
+function formatDate(date: Date): string {
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${date.getFullYear()}-${month}-${day}`;
+}
+
+function readClientDate(): string {
+  return formatDate(new Date());
+}
+
+function subscribeToDate(onChange: () => void): () => void {
+  let timer = 0;
+  const scheduleMidnight = () => {
+    const now = new Date();
+    const midnight = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate() + 1,
+    );
+    timer = window.setTimeout(() => {
+      onChange();
+      scheduleMidnight();
+    }, midnight.getTime() - now.getTime() + 1000);
+  };
+  scheduleMidnight();
+  return () => window.clearTimeout(timer);
+}
+
+/** Is this selection still inside the picker's range, and not in the past? */
+function isSelectable(
+  selection: { year: number; month: number; day: number },
+  baseMonth: { year: number; month: number },
+  today: Date,
+): boolean {
+  const offset = monthsBetween(baseMonth, selection);
+  if (offset < 0 || offset >= CALENDAR_MONTHS) return false;
+  return new Date(selection.year, selection.month, selection.day) >= today;
+}
+
 /** Months between two {year, month} pairs. */
 function monthsBetween(
   from: { year: number; month: number },
@@ -167,13 +212,19 @@ export function KarvonProvider({
   startCity = "rim",
   autoplay = false,
 }: KarvonProviderProps) {
-  // `today` comes from the server so the first client render matches the
-  // markup byte for byte. The page revalidates often enough that it never
-  // drifts more than a few minutes from the real date.
+  // `todayProp` is only the first snapshot — the value the server, or a static
+  // build, rendered with. The client swaps in the real date right after
+  // hydration, so neither a cached page nor a week-old build shows stale days.
+  const todayISO = useSyncExternalStore(
+    subscribeToDate,
+    readClientDate,
+    () => todayProp,
+  );
+
   const today = useMemo(() => {
-    const [year, month, day] = todayProp.split("-").map(Number);
+    const [year, month, day] = todayISO.split("-").map(Number);
     return new Date(year, month - 1, day);
-  }, [todayProp]);
+  }, [todayISO]);
 
   const startIndex = Math.max(
     0,
@@ -201,10 +252,24 @@ export function KarvonProvider({
   );
 
   // Default selection: the 14th of next month, matching the prototype.
-  const [selected, setSelected] = useState(() => {
+  const defaultSelected = useMemo(() => {
     const next = addMonths(baseMonth, 1);
     return { year: next.year, month: next.month, day: 14 };
-  });
+  }, [baseMonth]);
+
+  // The visitor's pick, when they have made one. It is validated on read
+  // rather than corrected in an effect, so a pick that the date rolling over
+  // has pushed into the past simply falls back to the default.
+  const [pickedDate, setPickedDate] = useState<{
+    year: number;
+    month: number;
+    day: number;
+  } | null>(null);
+
+  const selected =
+    pickedDate && isSelectable(pickedDate, baseMonth, today)
+      ? pickedDate
+      : defaultSelected;
 
   // Which month the calendar is scrolled to; null means "the selected one".
   const [view, setView] = useState<number | null>(null);
@@ -310,7 +375,7 @@ export function KarvonProvider({
 
   const pickDay = useCallback(
     (day: number) => {
-      setSelected({ year: viewMonth.year, month: viewMonth.month, day });
+      setPickedDate({ year: viewMonth.year, month: viewMonth.month, day });
       setPopover(null);
     },
     [viewMonth],

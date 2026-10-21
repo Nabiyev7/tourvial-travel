@@ -4,24 +4,25 @@ on:
   push:
     branches:
       - main
-      # Lets the site go live before the first PR is merged. Drop this line
-      # once the branch has landed on main.
+      # Lets the site stay current before the first PR is merged. Drop this
+      # line once the branch has landed on main.
       - claude/quirky-archimedes-cfige3
   workflow_dispatch:
 
-# `configure-pages` needs pages:write to switch Pages on the first time.
+# Pages serves this repository from the gh-pages branch, so publishing is a
+# push to that branch rather than an upload-pages-artifact / deploy-pages pair.
+# The Actions source would be tidier, but switching to it needs the Create
+# Pages site API, which refuses the workflow token ("Resource not accessible by
+# integration") — see PR #1. Pushing a branch needs only contents: write.
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
-# Allow one deployment at a time; don't cancel one that is already publishing.
 concurrency:
   group: pages
   cancel-in-progress: false
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -37,34 +38,29 @@ jobs:
       - run: npm run typecheck
       - run: npm run lint
 
-      - id: pages
-        uses: actions/configure-pages@v5
-        with:
-          # Turn Pages on the first time this runs, so no manual setup step is
-          # needed in the repository settings.
-          enablement: true
-
       - name: Build static site
         env:
           NEXT_OUTPUT: export
           # A GitHub Pages project site is served from /<repo>/.
-          NEXT_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          NEXT_BASE_PATH: /${{ github.event.repository.name }}
         run: npm run build
 
-      # Tells GitHub Pages not to run the output through Jekyll, which would
-      # otherwise drop the _next directory.
+      # Without this, Pages runs the output through Jekyll, which drops _next.
       - run: touch out/.nojekyll
 
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: out
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Publish to gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          cd out
+          git init -q
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Deploy ${GITHUB_SHA} to GitHub Pages"
+          # gh-pages holds generated output only, so each deploy replaces it
+          # rather than piling up build commits nobody reads.
+          git push --force --quiet \
+            "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+            HEAD:gh-pages

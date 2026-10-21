@@ -39,6 +39,15 @@ The site is live on GitHub Pages at
 `.github/workflows/deploy.yml` on every push to `main`. The workflow runs
 `typecheck` and `lint` first, so a broken build never reaches the live site.
 
+Pages serves the repository from the **`gh-pages`** branch, which holds build
+output only and is replaced on each deploy — never edit it by hand. The
+tidier "GitHub Actions" source is not used because switching to it needs the
+Create Pages site API, and that refuses the workflow token
+(`Resource not accessible by integration`). Pushing a branch needs only
+`contents: write`, which the workflow does have. To move to the Actions
+source later, set Settings → Pages → Source → GitHub Actions by hand first,
+then the workflow can go back to `upload-pages-artifact` / `deploy-pages`.
+
 `next.config.ts` has two build modes:
 
 | Mode | How | What you get |

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0e0d0c;color:#f3efe7;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}a:hover{color:#ffffff}
+select option{color:#111}
+</style>
+</helmet>
+<div style="min-height:100vh;background:#0e0d0c;color:#f3efe7">
+
+<header style="position:absolute;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:clamp(18px,4vw,28px) clamp(20px,5vw,72px);flex-wrap:wrap">
+  <div style="font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;letter-spacing:0.02em">KARVON</div>
+  <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}">
+  <nav style="display:flex;gap:clamp(16px,2.4vw,32px);font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(243,239,231,0.82);flex-wrap:wrap">
+    <a href="#yonalish" onClick="{{ go.yonalish }}">Yo'nalishlar</a>
+    <a href="#paketlar" onClick="{{ go.paketlar }}">Paketlar</a>
+    <a href="#tajriba" onClick="{{ go.tajriba }}">Tajribalar</a>
+    <a href="#biz" onClick="{{ go.biz }}">Biz haqimizda</a>
+    <a href="#aloqa" onClick="{{ go.aloqa }}">Aloqa</a>
+  </nav>
+  <a href="#aloqa" onClick="{{ bookGeneral }}" style="display:flex;align-items:center;gap:10px;padding:12px 22px;border:1px solid rgba(243,239,231,0.4);border-radius:999px;font-size:13px;letter-spacing:0.06em;text-transform:uppercase">Buyurtma berish</a>
+  </sc-if>
+  <sc-if value="{{ mobile }}" hint-placeholder-val="{{ false }}">
+    <button type="button" onClick="{{ toggleMenu }}" style="display:flex;align-items:center;gap:10px;min-height:44px;padding:0 18px;border:1px solid rgba(243,239,231,0.4);border-radius:999px;background:rgba(14,13,12,0.35);color:#f3efe7;font-family:'Manrope',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer">{{ menuLabel }}</button>
+  </sc-if>
+</header>
+
+<sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:15;background:#0e0d0c;display:flex;flex-direction:column;justify-content:space-between;gap:32px;padding:120px 24px 40px">
+    <nav style="display:flex;flex-direction:column;gap:4px">
+      <a href="#yonalish" onClick="{{ go.yonalish }}" style="padding:12px 0;border-bottom:1px solid rgba(243,239,231,0.12);font-family:'Cormorant Garamond',serif;font-size:38px;line-height:1.1">Yo'nalishlar</a>
+      <a href="#paketlar" onClick="{{ go.paketlar }}" style="padding:12px 0;border-bottom:1px solid rgba(243,239,231,0.12);font-family:'Cormorant Garamond',serif;font-size:38px;line-height:1.1">Paketlar</a>
+      <a href="#tajriba" onClick="{{ go.tajriba }}" style="padding:12px 0;border-bottom:1px solid rgba(243,239,231,0.12);font-family:'Cormorant Garamond',serif;font-size:38px;line-height:1.1">Tajribalar</a>
+      <a href="#biz" onClick="{{ go.biz }}" style="padding:12px 0;border-bottom:1px solid rgba(243,239,231,0.12);font-family:'Cormorant Garamond',serif;font-size:38px;line-height:1.1">Biz haqimizda</a>
+      <a href="#aloqa" onClick="{{ go.aloqa }}" style="padding:12px 0;border-bottom:1px solid rgba(243,239,231,0.12);font-family:'Cormorant Garamond',serif;font-size:38px;line-height:1.1">Aloqa</a>
+    </nav>
+    <a href="#aloqa" onClick="{{ bookGeneral }}" style="display:flex;justify-content:center;padding:18px;background:{{ accent }};color:#0e0d0c;border-radius:999px;font-size:13px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase">Buyurtma berish</a>
+  </div>
+</sc-if>
+
+<section id="yonalish" data-screen-label="Hero" style="position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:clamp(120px,18vw,180px) clamp(20px,5vw,72px) clamp(32px,5vw,48px);box-sizing:border-box;overflow:hidden;background:#0e0d0c">
+  <sc-for list="{{ cities }}" as="c" hint-placeholder-count="1">
+    <img src="{{ c.img }}" alt="{{ c.name }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:{{ c.pos }};opacity:{{ c.opacity }};transform:scale({{ c.scale }});transition:opacity 1.2s ease,transform 7s ease-out">
+  </sc-for>
+  <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,13,12,0.72) 0%,rgba(14,13,12,0.35) 45%,rgba(14,13,12,0) 75%),linear-gradient(180deg,rgba(14,13,12,0.7) 0%,rgba(14,13,12,0.15) 30%,rgba(14,13,12,0.55) 60%,rgba(14,13,12,0.97) 100%)"></div>
+
+  <div style="position:relative;display:flex;flex-wrap:wrap;gap:clamp(28px,4vw,40px) 64px;align-items:end;justify-content:space-between">
+    <div style="display:flex;flex-direction:column;gap:18px;min-width:0;flex:1 1 520px">
+      <div style="display:flex;align-items:center;gap:14px;font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:{{ accent }};transition:color 0.8s">
+        <span style="width:40px;height:1px;background:{{ accent }}"></span>
+        <span>{{ city.country }}</span>
+      </div>
+      <h1 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(60px,10vw,180px);line-height:0.85;letter-spacing:-0.02em">{{ city.name }}</h1>
+      <p style="margin:0;max-width:520px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(20px,2vw,28px);line-height:1.35;color:#f3efe7;text-shadow:0 1px 18px rgba(0,0,0,0.6);text-wrap:pretty">{{ city.tagline }}</p>
+    </div>
+    <sc-if value="{{ mobile }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;gap:8px;overflow-x:auto;flex:1 1 100%;min-width:0;margin:0 -20px;padding:0 20px 4px;scrollbar-width:none">
+        <sc-for list="{{ cities }}" as="c" hint-placeholder-count="6">
+          <button onClick="{{ c.select }}" style="flex:0 0 auto;min-height:44px;padding:0 18px;border-radius:999px;border:1px solid rgba(243,239,231,{{ c.lineA }});background:{{ c.chipBg }};color:{{ c.chipColor }};font-family:'Manrope',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap;cursor:pointer;transition:all 0.4s">{{ c.name }}</button>
+        </sc-for>
+      </div>
+    </sc-if>
+    <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;flex-direction:column;gap:6px;flex:0 1 340px;min-width:260px;padding:8px 20px;background:rgba(14,13,12,0.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:4px">
+      <sc-for list="{{ cities }}" as="c" hint-placeholder-count="6">
+        <button onClick="{{ c.select }}" style="display:grid;grid-template-columns:36px 1fr auto;align-items:center;gap:12px;padding:12px 0;background:none;border:none;border-bottom:1px solid rgba(243,239,231,{{ c.lineA }});color:rgba(243,239,231,{{ c.textA }});font-family:'Manrope',sans-serif;font-size:14px;letter-spacing:0.12em;text-transform:uppercase;text-align:left;cursor:pointer;transition:all 0.4s">
+          <span style="font-size:11px;color:{{ c.numColor }}">{{ c.num }}</span>
+          <span>{{ c.name }}</span>
+          <span style="font-size:12px;letter-spacing:0.04em;text-transform:none">{{ c.from }}</span>
+        </button>
+      </sc-for>
+    </div>
+    </sc-if>
+  </div>
+</section>
+
+<section style="padding:0 clamp(20px,5vw,72px);margin-top:-1px;background:#0e0d0c">
+  <form onSubmit="{{ onSearch }}" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:1px;background:rgba(243,239,231,0.12);border:1px solid rgba(243,239,231,0.12);border-radius:4px;position:relative;z-index:5">
+    <label style="display:flex;flex-direction:column;gap:6px;padding:20px 24px;background:#141311">
+      <span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(243,239,231,0.55)">Manzil</span>
+      <span style="font-size:16px;font-weight:600">{{ city.name }}, {{ city.country }}</span>
+    </label>
+    <div style="position:relative;background:#141311">
+      <button type="button" onClick="{{ toggleMonth }}" style="width:100%;height:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 24px;background:none;border:none;color:#f3efe7;text-align:left;cursor:pointer;font-family:'Manrope',sans-serif">
+        <span style="display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(243,239,231,0.55)">Sana</span>
+          <span style="font-size:16px;font-weight:600">{{ monthLabel }}</span>
+        </span>
+        <span style="font-size:12px;color:{{ accent }};transform:rotate({{ monthRot }});transition:transform 0.3s">▾</span>
+      </button>
+      <sc-if value="{{ monthOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;top:calc(100% + 8px);left:0;z-index:30;width:max(100%,min(320px,calc(100vw - 40px)));box-sizing:border-box;padding:20px;background:#1a1816;border:1px solid rgba(243,239,231,0.14);border-radius:4px;box-shadow:0 24px 60px rgba(0,0,0,0.5);display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+            <button type="button" onClick="{{ prevMonth }}" style="width:36px;height:36px;border-radius:50%;border:1px solid rgba(243,239,231,0.14);background:none;color:#f3efe7;cursor:pointer;opacity:{{ prevOp }};font-size:14px">‹</button>
+            <span style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500">{{ viewLabel }}</span>
+            <button type="button" onClick="{{ nextMonth }}" style="width:36px;height:36px;border-radius:50%;border:1px solid rgba(243,239,231,0.14);background:none;color:#f3efe7;cursor:pointer;opacity:{{ nextOp }};font-size:14px">›</button>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px">
+            <sc-for list="{{ weekdays }}" as="w" hint-placeholder-count="7">
+              <span style="padding:6px 0;text-align:center;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(243,239,231,0.45)">{{ w }}</span>
+            </sc-for>
+            <sc-for list="{{ days }}" as="d" hint-placeholder-count="35">
+              <button type="button" onClick="{{ d.pick }}" disabled="{{ d.off }}" style="height:38px;border-radius:50%;border:none;background:{{ d.bg }};color:{{ d.color }};font-family:'Manrope',sans-serif;font-size:14px;font-weight:{{ d.weight }};cursor:{{ d.cursor }};visibility:{{ d.vis }}">{{ d.n }}</button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+    <div style="position:relative;background:#141311">
+      <button type="button" onClick="{{ toggleGuests }}" style="width:100%;height:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 24px;background:none;border:none;color:#f3efe7;text-align:left;cursor:pointer;font-family:'Manrope',sans-serif">
+        <span style="display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(243,239,231,0.55)">Mehmonlar</span>
+          <span style="font-size:16px;font-weight:600">{{ guestsLabel }}</span>
+        </span>
+        <span style="font-size:12px;color:{{ accent }};transform:rotate({{ guestsRot }});transition:transform 0.3s">▾</span>
+      </button>
+      <sc-if value="{{ guestsOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;top:calc(100% + 8px);left:0;right:0;z-index:30;padding:8px;background:#1a1816;border:1px solid rgba(243,239,231,0.14);border-radius:4px;box-shadow:0 24px 60px rgba(0,0,0,0.5);display:flex;flex-direction:column;gap:2px">
+          <sc-for list="{{ guestOpts }}" as="g" hint-placeholder-count="4">
+            <button type="button" onClick="{{ g.pick }}" style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border:none;border-radius:2px;background:{{ g.bg }};color:#f3efe7;font-family:'Manrope',sans-serif;font-size:15px;font-weight:500;cursor:pointer;text-align:left" style-hover="background:rgba(243,239,231,0.06)">
+              <span>{{ g.label }}</span>
+              <span style="color:{{ accent }};opacity:{{ g.check }}">●</span>
+            </button>
+          </sc-for>
+        </div>
+      </sc-if>
+    </div>
+    <button type="submit" style="padding:20px 24px;background:{{ accent }};color:#0e0d0c;border:none;font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer;transition:background 0.8s">Sayohatni rejalashtirish</button>
+  </form>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:clamp(20px,3vw,32px);padding:clamp(40px,6vw,56px) 0 0">
+    <sc-for list="{{ facts }}" as="f" hint-placeholder-count="4">
+      <div style="display:flex;flex-direction:column;gap:8px;padding-top:16px;border-top:1px solid rgba(243,239,231,0.14)">
+        <span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(243,239,231,0.55)">{{ f.k }}</span>
+        <span style="font-family:'Cormorant Garamond',serif;font-size:26px;line-height:1.2">{{ f.v }}</span>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<section id="paketlar" data-screen-label="Paketlar" style="padding:clamp(80px,12vw,140px) clamp(20px,5vw,72px) clamp(72px,10vw,120px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:clamp(40px,6vw,96px);align-items:start">
+  <div style="position:{{ stickyPos }};top:40px;display:flex;flex-direction:column;gap:28px">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <span style="font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:{{ accent }}">{{ city.name }} paketlari</span>
+      <h2 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(44px,5vw,72px);line-height:1;letter-spacing:-0.01em;text-wrap:balance">Har bir kun oldindan o'ylangan</h2>
+    </div>
+    <div style="position:relative;aspect-ratio:{{ imgRatio }};overflow:hidden;border-radius:2px;background:#1a1816">
+      <sc-for list="{{ cities }}" as="c" hint-placeholder-count="1">
+        <img src="{{ c.second }}" alt="{{ c.name }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:{{ c.opacity }};transition:opacity 1s ease">
+      </sc-for>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;padding-top:clamp(0px,8vw,160px)">
+    <sc-for list="{{ packages }}" as="p" hint-placeholder-count="3">
+      <article style="display:flex;flex-direction:column;gap:20px;padding:40px 0;border-top:1px solid rgba(243,239,231,0.14)">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(243,239,231,0.6)">
+          <span>{{ p.num }} · {{ p.days }}</span>
+          <span>{{ p.price }} dan</span>
+        </div>
+        <h3 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(32px,3.2vw,44px);line-height:1.05">{{ p.title }}</h3>
+        <p style="margin:0;max-width:520px;font-size:16px;line-height:1.65;color:rgba(243,239,231,0.75);text-wrap:pretty">{{ p.desc }}</p>
+        <a href="#aloqa" onClick="{{ p.book }}" style="display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:{{ accent }}">
+          <span>Batafsil va buyurtma</span><span>→</span>
+        </a>
+      </article>
+    </sc-for>
+  </div>
+</section>
+
+<section id="tajriba" data-screen-label="Tajribalar" style="padding:clamp(72px,10vw,120px) clamp(20px,5vw,72px);background:{{ accentDim }};transition:background 1s">
+  <div style="display:flex;justify-content:space-between;align-items:end;gap:32px;flex-wrap:wrap;margin-bottom:clamp(40px,6vw,64px)">
+    <h2 style="margin:0;max-width:720px;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(40px,4.5vw,64px);line-height:1.05;text-wrap:balance">{{ city.name }}da faqat siz uchun ochiladigan eshiklar</h2>
+    <p style="margin:0;max-width:360px;font-size:15px;line-height:1.65;color:rgba(243,239,231,0.72)">Har bir tajriba istalgan paketga qo'shiladi yoki alohida band qilinadi.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px">
+    <sc-for list="{{ experiences }}" as="e" hint-placeholder-count="4">
+      <div style="display:flex;flex-direction:column;gap:14px;padding:36px 28px 44px;background:#0e0d0c;border:1px solid rgba(243,239,231,0.14);border-radius:2px">
+        <span style="width:8px;height:8px;border-radius:50%;background:{{ accent }}"></span>
+        <h3 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:28px;line-height:1.1">{{ e.title }}</h3>
+        <p style="margin:0;font-size:15px;line-height:1.6;color:rgba(243,239,231,0.7)">{{ e.desc }}</p>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<section id="biz" data-screen-label="Biz haqimizda" style="padding:clamp(80px,12vw,140px) clamp(20px,5vw,72px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(40px,6vw,64px)">
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <span style="font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(243,239,231,0.55)">Nima uchun Karvon</span>
+    <h2 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(40px,4.5vw,60px);line-height:1.05">15 yildan beri sayohatni tafsilotlardan quramiz</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:clamp(28px,4vw,40px)">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <h3 style="margin:0;font-size:16px;font-weight:700">Shaxsiy menejer</h3>
+      <p style="margin:0;font-size:15px;line-height:1.65;color:rgba(243,239,231,0.7)">Bir kishi butun safaringiz uchun javobgar va 24/7 Telegramda aloqada.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <h3 style="margin:0;font-size:16px;font-weight:700">Viza va hujjatlar</h3>
+      <p style="margin:0;font-size:15px;line-height:1.65;color:rgba(243,239,231,0.7)">Ariza, sug'urta va bandlovlarni biz tayyorlaymiz.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <h3 style="margin:0;font-size:16px;font-weight:700">Tekshirilgan joylar</h3>
+      <p style="margin:0;font-size:15px;line-height:1.65;color:rgba(243,239,231,0.7)">Har bir mehmonxona va gidni jamoamiz o'zi sinab ko'rgan.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <h3 style="margin:0;font-size:16px;font-weight:700">Shaffof narx</h3>
+      <p style="margin:0;font-size:15px;line-height:1.65;color:rgba(243,239,231,0.7)">Yashirin to'lovlarsiz, so'm yoki dollarda to'lash mumkin.</p>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Fikr" style="padding:clamp(72px,10vw,120px) clamp(20px,5vw,72px);border-top:1px solid rgba(243,239,231,0.12);display:flex;flex-direction:column;align-items:center;gap:32px;text-align:center">
+  <span style="font-family:'Cormorant Garamond',serif;font-size:clamp(72px,10vw,96px);line-height:0.5;color:{{ accent }}">“</span>
+  <blockquote style="margin:0;max-width:900px;font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;font-size:clamp(28px,3.4vw,48px);line-height:1.25;text-wrap:balance">{{ quote }}</blockquote>
+  <span style="font-size:13px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(243,239,231,0.6)">{{ quoteBy }}</span>
+</section>
+
+<section id="aloqa" data-screen-label="Aloqa" style="position:relative;overflow:hidden;min-height:min(560px,100vh);display:flex;align-items:center;padding:clamp(72px,10vw,120px) clamp(20px,5vw,72px)">
+  <sc-for list="{{ cities }}" as="c" hint-placeholder-count="1">
+    <img src="{{ c.img }}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:{{ c.opacity }};transition:opacity 1.2s ease">
+  </sc-for>
+  <div style="position:absolute;inset:0;background:rgba(14,13,12,0.72)"></div>
+  <div style="position:relative;display:flex;flex-direction:column;gap:28px;max-width:760px">
+    <h2 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(48px,6vw,88px);line-height:0.98;text-wrap:balance">{{ city.name }}ga sayohatni bugun rejalashtiring</h2>
+    <p style="margin:0;font-size:17px;line-height:1.6;color:rgba(243,239,231,0.82)">Menejer 15 daqiqa ichida qo'ng'iroq qilib, sizga mos dasturni taklif qiladi.</p>
+    <div style="display:flex;gap:14px;flex-wrap:wrap">
+      <a href="tel:+998712000000" onClick="{{ bookGeneral }}" style="padding:18px 30px;background:{{ accent }};color:#0e0d0c;border-radius:999px;font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase">Qo'ng'iroq buyurtma qilish</a>
+      <a href="https://t.me/" target="_blank" rel="noopener" style="padding:18px 30px;border:1px solid rgba(243,239,231,0.5);border-radius:999px;font-size:13px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase">Telegramda yozish</a>
+    </div>
+  </div>
+</section>
+
+<footer style="padding:56px clamp(20px,5vw,72px);display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;font-size:13px;color:rgba(243,239,231,0.55)">
+  <span style="font-family:'Cormorant Garamond',serif;font-size:24px;color:#f3efe7">Karvon</span>
+  <span>Toshkent, Amir Temur ko'chasi · +998 71 200 00 00</span>
+  <div style="display:flex;gap:24px"><a href="#yonalish" onClick="{{ go.yonalish }}">Yuqoriga ↑</a></div>
+</footer>
+
+<sc-if value="{{ bookOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeBook }}" style="position:fixed;inset:0;z-index:100;background:rgba(8,7,6,0.78);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px">
+    <div onClick="{{ stop }}" style="position:relative;width:100%;max-width:520px;max-height:calc(100vh - 40px);overflow:auto;background:#141311;border:1px solid rgba(243,239,231,0.14);border-radius:4px;padding:clamp(24px,6vw,40px);box-sizing:border-box;display:flex;flex-direction:column;gap:24px;color:#f3efe7">
+      <button type="button" onClick="{{ closeBook }}" style="position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:50%;border:1px solid rgba(243,239,231,0.14);background:none;color:#f3efe7;font-size:18px;cursor:pointer">×</button>
+      <sc-if value="{{ bookForm }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:10px;padding-right:40px">
+          <span style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:{{ accent }}">{{ city.name }} · {{ monthLabel }} · {{ guestsLabel }}</span>
+          <h3 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(28px,7vw,38px);line-height:1.05">{{ bookTitle }}</h3>
+        </div>
+        <form onSubmit="{{ sendBook }}" style="display:flex;flex-direction:column;gap:14px">
+          <label style="display:flex;flex-direction:column;gap:8px">
+            <span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(243,239,231,0.55)">Ismingiz</span>
+            <input required="{{ true }}" value="{{ bName }}" onChange="{{ onName }}" placeholder="Ism Familiya" style="padding:14px 16px;background:#0e0d0c;border:1px solid rgba(243,239,231,0.14);border-radius:2px;color:#f3efe7;font-family:'Manrope',sans-serif;font-size:16px;outline:none">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:8px">
+            <span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(243,239,231,0.55)">Telefon</span>
+            <input required="{{ true }}" type="tel" value="{{ bPhone }}" onChange="{{ onPhone }}" placeholder="+998 90 123 45 67" style="padding:14px 16px;background:#0e0d0c;border:1px solid rgba(243,239,231,0.14);border-radius:2px;color:#f3efe7;font-family:'Manrope',sans-serif;font-size:16px;outline:none">
+          </label>
+          <span style="font-size:13px;color:{{ errColor }}">{{ bErr }}</span>
+          <button type="submit" style="padding:18px;background:{{ accent }};color:#0e0d0c;border:none;border-radius:999px;font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer">So'rov yuborish</button>
+        </form>
+      </sc-if>
+      <sc-if value="{{ bookDone }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:16px;padding:12px 0">
+          <span style="width:12px;height:12px;border-radius:50%;background:{{ accent }}"></span>
+          <h3 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:38px;line-height:1.05">Rahmat, {{ bName }}!</h3>
+          <p style="margin:0;font-size:16px;line-height:1.6;color:rgba(243,239,231,0.75)">So'rovingiz qabul qilindi. Menejer 15 daqiqa ichida {{ bPhone }} raqamiga qo'ng'iroq qiladi.</p>
+          <button type="button" onClick="{{ closeBook }}" style="align-self:flex-start;padding:14px 26px;border:1px solid rgba(243,239,231,0.4);background:none;border-radius:999px;color:#f3efe7;font-family:'Manrope',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer">Yopish</button>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;autoplay&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;startCity&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;rim&quot;,&quot;dubai&quot;,&quot;istanbul&quot;,&quot;paris&quot;,&quot;tokyo&quot;,&quot;newyork&quot;],&quot;default&quot;:&quot;rim&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { i: 0, month: '2026-11', guests: '2' };
+  CITIES = [
+    { key:'rim', name:'Rim', country:'Italiya', hue:225, from:'6 soat', img:'https://images.unsplash.com/photo-1555992828-ca4dbe41d294?w=2000&q=80', pos:'center 50%',
+      tagline:"Kolizey soyasida ikki ming yillik tosh ko'chalar va kechki espresso." },
+    { key:'dubai', name:'Dubay', country:'BAA', hue:70, from:'3 soat', img:'https://images.unsplash.com/photo-1566972638537-8c04edd6aa4d?w=2000&q=80', pos:'center 60%',
+      tagline:"Cho'l sukunati va osmono'par minoralar orasidagi oltin oqshomlar." },
+    { key:'istanbul', name:'Istanbul', country:'Turkiya', hue:35, from:'4 soat', img:'https://images.pexels.com/photos/19161622/pexels-photo-19161622.jpeg?auto=compress&cs=tinysrgb&w=2000', pos:'center 55%',
+      tagline:"Ikki qit'a tutashgan joyda Bosfor ustidagi azon va choy hidi." },
+    { key:'paris', name:'Parij', country:'Fransiya', hue:300, from:'7 soat', img:'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=2000&q=80', pos:'center 50%',
+      tagline:"Sena qirg'og'ida sekin tong, galereyalar va mualliflik oshxonasi." },
+    { key:'tokyo', name:'Tokio', country:'Yaponiya', hue:350, from:'9 soat', img:'https://images.unsplash.com/photo-1770752609290-264c53dc54a3?w=2000&q=80', pos:'center 65%',
+      tagline:"Neon ko'chalar va ming yillik ibodatxonalar sukunati bir shaharda." },
+    { key:'newyork', name:'Nyu-York', country:'AQSH', hue:95, from:'13 soat', img:'https://images.pexels.com/photos/14426200/pexels-photo-14426200.jpeg?auto=compress&cs=tinysrgb&w=2000', pos:'center 50%',
+      tagline:"Manxetten tomlaridan ko'rinadigan, hech qachon uxlamaydigan shahar." },
+  ];
+  D = {
+    rim: { season:'Aprel – Iyun, Sentabr – Oktabr', visa:'Shengen vizasi', tz:'−4 soat', flight:'6 soat, 1 to\'xtash',
+      pk:[['Abadiy shahar','4 kun','$2 300','Ispan zinapoyasi yonidagi butik mehmonxona, Kolizey va Forum bo\'ylab xususiy gid.'],['Vatikan va Toskana','6 kun','$3 600','Vatikan muzeylari ochilishidan oldin, keyin Toskana uzumzorlarida ikki kun.'],['Rim ta\'mi','3 kun','$1 700','Trastevere oshxonalari, pasta darsi va Rim tomlarida kechki ovqat.']],
+      ex:[['Kolizey yer osti','Gladiatorlar yo\'laklari bo\'ylab yopiq tur'],['Sikstin kapellasi','Olomonsiz erta tongdagi tashrif'],['Vespa sayri','Yetti tepalik bo\'ylab gid bilan'],['Pasta darsi','Rimlik oshpaz bilan qo\'lda pasta tayyorlash']],
+      q:['Sikstin kapellasida deyarli yolg\'iz qoldik. Bunday tongni boshqa hech qayerda ko\'rmaganmiz.','Malika va Javlon, Toshkent'] },
+    dubai: { season:'Noyabr – Mart', visa:'Elektron viza', tz:'−1 soat', flight:'3 soat to\'g\'ridan-to\'g\'ri',
+      pk:[['Oltin cho\'l','4 kun','$1 450','Cho\'l kurortida tunash, quyosh botishida tuya safari va yulduzli kechki ovqat.'],['Osmon ostida','3 kun','$1 120','Burj Xalifa 148-qavat, Marina bo\'ylab yaxta va mualliflik restoranlari.'],['Oilaviy hafta','6 kun','$2 300','Palm Jumeyra kurorti, akvapark va bolalar uchun alohida dastur.']],
+      ex:[['Yaxtada kechki ovqat','Marina chiroqlari ostida xususiy yaxta'],['Cho\'l safari','Qumtepalar orasida 4x4 va badaviy lager'],['Oltin bozor','Deyra bozorida shaxsiy xarid maslahatchisi'],['Havo shari','Tongda cho\'l uzra parvoz']],
+      q:['Har bir transfer o\'z vaqtida, har bir stol oldindan band qilingan edi. Biz faqat dam oldik.','Sardor Rahimov, Samarqand'] },
+    istanbul: { season:'Aprel – May, Sentabr – Oktabr', visa:'Kerak emas', tz:'−2 soat', flight:'4 soat to\'g\'ridan-to\'g\'ri',
+      pk:[['Bosfor oqshomi','3 kun','$780','Bosfor bo\'yidagi tarixiy mehmonxona, xususiy qayiq va Sultonahmad bo\'ylab gid.'],['Ikki qit\'a','5 kun','$1 190','Yevropa va Osiyo qirg\'oqlari, Kapadokiya havo shari bilan.'],['Ta\'m sayohati','2 kun','$540','Qadiqo\'y bozori, baliq restoranlari va turk qahvasi ustaxonasi.']],
+      ex:[['Xususiy qayiq','Quyosh botishida Bosfor bo\'ylab'],['Hammom','Tarixiy hammomda an\'anaviy marosim'],['Katta bozor','Gilam va mis ustalari bilan uchrashuv'],['Kapadokiya','Tongda havo sharida parvoz']],
+      q:['Ayasofiyani olomonsiz ko\'rish uchun gid ertalab soat yettida kutib turgan edi.','Dilnoza Karimova, Toshkent'] },
+    paris: { season:'May – Iyun, Sentabr', visa:'Shengen viza', tz:'−3 soat', flight:'7 soat, 1 to\'xtash',
+      pk:[['Sena bo\'yida','4 kun','$2 100','Saint-Germain\'dagi butik mehmonxona, Luvr xususiy turi va kechki kruiz.'],['Atir va sharob','6 kun','$3 400','Parij, Grass atir ustaxonasi va Burgundiya uzumzorlari.'],['Moda haftasi','3 kun','$1 850','Shaxsiy stilist bilan butiklar va Galeries Lafayette tomidan manzara.']],
+      ex:[['Luvr kechasi','Muzey yopilgandan keyin xususiy tur'],['Shef stoli','Michelin restoranida oshxona yonidagi stol'],['Monmartr','Rassomlar mahallasida tonggi sayr'],['Versal','Bog\'lar bo\'ylab velosiped va piknik']],
+      q:['Viza hujjatlaridan tortib restoran bandlovigacha hammasini Karvon hal qildi.','Aziza va Bekzod, Namangan'] },
+    tokyo: { season:'Mart – Aprel, Oktabr – Noyabr', visa:'Elektron viza', tz:'+4 soat', flight:'9 soat, 1 to\'xtash',
+      pk:[['Sakura fasli','6 kun','$3 200','Gullagan olcha ostida Tokio va Kioto, sinkansen va riokan mehmonxonasi.'],['Neon va sukunat','4 kun','$2 450','Shibuya, Shinjuku tunlari va Nikko ibodatxonalariga safar.'],['Oshxona yo\'li','3 kun','$1 900','Tsukiji bozori, omakase kechki ovqat va sake ustaxonasi.']],
+      ex:[['Choy marosimi','Kiotoda usta bilan an\'anaviy choy'],['Omakase','Sushi ustasining sakkiz o\'rinli stoli'],['Onsen','Fudzi ko\'rinadigan issiq buloq'],['Tungi Tokio','Gid bilan izakaya ko\'chalari']],
+      q:['Kiotodagi riokanda tunash safarning eng yodda qolgan kuni bo\'ldi.','Javohir Tursunov, Toshkent'] },
+    newyork: { season:'Aprel – Iyun, Sentabr – Dekabr', visa:'AQSH vizasi', tz:'−10 soat', flight:'13 soat, 1 to\'xtash',
+      pk:[['Manxetten klassikasi','5 kun','$3 600','Central Park yonidagi mehmonxona, Brodvey shousi va vertolyot parvozi.'],['Bayram Nyu-Yorki','4 kun','$3 100','Dekabr chiroqlari, Rokfeller muz maydoni va bayram bozorlari.'],['San\'at va jaz','3 kun','$2 200','MoMA va Met xususiy turi, Garlemda jaz kechasi.']],
+      ex:[['Vertolyot','Gudzon daryosi uzra 20 daqiqa'],['Brodvey','Eng yaxshi o\'rinlar va sahna ortiga tashrif'],['Tomdagi kechki ovqat','Manxetten chiroqlari ko\'rinadigan stol'],['Bruklin','Mahalliy gid bilan sayr va kofe']],
+      q:['Birinchi marta Amerikaga borayotgan edik. Karvon viza intervyusiga ham tayyorladi.','Shahzoda Ergasheva, Farg\'ona'] },
+  };
+  componentDidMount() {
+    const s = Number(localStorage.getItem('tourvia_city'));
+    const start = this.props.startCity ? this.CITIES.findIndex(c => c.key === this.props.startCity) : -1;
+    if (!isNaN(s) && s > 0 && s < this.CITIES.length) this.setState({ i: s });
+    else if (start > 0) this.setState({ i: start });
+    this.onResize = () => { const m = window.innerWidth < 760; if (m !== this.state.mobile) this.setState({ mobile: m, menu: m ? this.state.menu : false }); };
+    this.onResize(); window.addEventListener('resize', this.onResize);
+    this.tick = setInterval(() => { if (this.props.autoplay && !this.state.book && !this.state.open && !this.state.menu) this.select((this.state.i + 1) % this.CITIES.length); }, 8000);
+  }
+  componentWillUnmount() { clearInterval(this.tick); window.removeEventListener('resize', this.onResize); document.removeEventListener('click', this.outside); }
+  openBook(pkg) { this.setState({ book: { pkg }, sent: false, open: null, bErr: '', menu: false }); }
+  outside = e => { if (this.state.open && !e.target.closest('form')) this.setState({ open: null }); };
+  pickers(accent) {
+    const MN = ['Yanvar','Fevral','Mart','Aprel','May','Iyun','Iyul','Avgust','Sentabr','Oktabr','Noyabr','Dekabr'];
+    const G = [['1','1 kishi'],['2','2 kishi'],['4','3–4 kishi'],['6','5–6 kishi']];
+    const open = this.state.open, cur = this.state.month;
+    if (!this._bound) { this._bound = true; document.addEventListener('click', this.outside); }
+    const today = new Date(2026, 9, 15);
+    const [cy, cm] = cur.split('-').map(Number);
+    const sd = this.state.day || 14;
+    const view = this.state.view ?? ((cy - 2026) * 12 + cm - 1 - 9);
+    const vy = 2026 + Math.floor((9 + view) / 12), vm = (9 + view) % 12;
+    const lead = (new Date(vy, vm, 1).getDay() + 6) % 7, count = new Date(vy, vm + 1, 0).getDate();
+    const days = [];
+    for (let k = 0; k < lead; k++) days.push({ n: '', vis: 'hidden', off: true, bg: 'none', color: 'transparent', weight: 400, cursor: 'default', pick: null });
+    for (let n = 1; n <= count; n++) {
+      const off = new Date(vy, vm, n) < today, sel = vy === cy && vm === cm - 1 && n === sd;
+      days.push({ n, vis: 'visible', off, bg: sel ? accent : 'transparent', color: sel ? '#0e0d0c' : off ? 'rgba(243,239,231,0.22)' : '#f3efe7',
+        weight: sel ? 700 : 500, cursor: off ? 'default' : 'pointer',
+        pick: () => this.setState({ month: `${vy}-${String(vm + 1).padStart(2, '0')}`, day: n, open: null }) });
+    }
+    return {
+      days, weekdays: ['Du','Se','Ch','Pa','Ju','Sh','Ya'], viewLabel: `${MN[vm]} ${vy}`,
+      prevOp: view > 0 ? 1 : 0.3, nextOp: view < 12 ? 1 : 0.3,
+      prevMonth: () => this.setState({ view: Math.max(0, view - 1) }),
+      nextMonth: () => this.setState({ view: Math.min(12, view + 1) }),
+      monthOpen: open === 'month', guestsOpen: open === 'guests',
+      monthRot: open === 'month' ? '180deg' : '0deg', guestsRot: open === 'guests' ? '180deg' : '0deg',
+      monthLabel: `${sd} ${MN[cm - 1]} ${cy}`,
+      guestsLabel: (G.find(g => g[0] === this.state.guests) || G[1])[1],
+      guestOpts: G.map(([v, label]) => ({ label, bg: v === this.state.guests ? 'rgba(243,239,231,0.06)' : 'transparent', check: v === this.state.guests ? 1 : 0,
+        pick: () => this.setState({ guests: v, open: null }) })),
+      toggleMonth: () => this.setState(s => ({ open: s.open === 'month' ? null : 'month', view: null })),
+      toggleGuests: () => this.setState(s => ({ open: s.open === 'guests' ? null : 'guests' })),
+    };
+  }
+  select(i) { this.setState({ i }); try { localStorage.setItem('tourvia_city', String(i)); } catch (e) {} }
+  renderVals() {
+    const i = this.state.i, city = this.CITIES[i], d = this.D[city.key];
+    const accent = `oklch(0.80 0.11 ${city.hue})`;
+    return {
+      facts: [['Parvoz', d.flight], ['Eng yaxshi mavsum', d.season], ['Viza', d.visa], ['Vaqt farqi', d.tz]].map(([k, v]) => ({ k, v })),
+      packages: d.pk.map(([title, days, price, desc], k) => ({ title, days, price, desc, num: String(k + 1).padStart(2, '0'),
+        book: e => { e.preventDefault(); this.openBook(`${title} · ${days}, ${price} dan`); } })),
+      experiences: d.ex.map(([title, desc]) => ({ title, desc })),
+      quote: d.q[0], quoteBy: d.q[1],
+      city, accent, month: this.state.month, guests: this.state.guests,
+      accentDim: `oklch(0.80 0.11 ${city.hue} / 0.14)`,
+      cities: this.CITIES.map((c, k) => ({ ...c, second: c.img2 || c.img, num: String(k + 1).padStart(2, '0'), opacity: k === i ? 1 : 0, scale: k === i ? 1.0 : 1.06,
+        lineA: k === i ? 0.9 : 0.18, chipBg: k === i ? accent : 'rgba(14,13,12,0.45)', chipColor: k === i ? '#0e0d0c' : '#f3efe7', textA: k === i ? 1 : 0.6, numColor: k === i ? accent : 'rgba(243,239,231,0.45)', select: () => this.select(k) })),
+      ...this.pickers(accent),
+      onSearch: e => { e.preventDefault(); this.openBook(null); },
+      go: Object.fromEntries(['yonalish','paketlar','tajriba','biz','aloqa'].map(id => [id, e => { e.preventDefault(); this.setState({ menu: false }); const el = document.getElementById(id); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY, behavior: 'smooth' }); }])),
+      mobile: !!this.state.mobile, desktop: !this.state.mobile, menuOpen: !!this.state.menu, menuLabel: this.state.menu ? 'Yopish' : 'Menyu',
+      toggleMenu: () => this.setState(s => ({ menu: !s.menu })),
+      stickyPos: this.state.mobile ? 'relative' : 'sticky', imgRatio: this.state.mobile ? '4 / 3' : '4 / 5',
+      bookGeneral: e => { e.preventDefault(); this.openBook(null); },
+      bookOpen: !!this.state.book, bookForm: !!this.state.book && !this.state.sent, bookDone: !!this.state.sent,
+      bookTitle: this.state.book && this.state.book.pkg ? this.state.book.pkg : `${city.name}ga sayohat`,
+      bName: this.state.bName || '', bPhone: this.state.bPhone || '', bErr: this.state.bErr || '', errColor: 'oklch(0.75 0.14 25)',
+      onName: e => this.setState({ bName: e.target.value, bErr: '' }),
+      onPhone: e => this.setState({ bPhone: e.target.value, bErr: '' }),
+      sendBook: e => { e.preventDefault(); const digits = (this.state.bPhone || '').replace(/\D/g, '');
+        if (digits.length < 9) return this.setState({ bErr: "Telefon raqamini to'liq kiriting" });
+        this.setState({ sent: true }); },
+      closeBook: () => this.setState({ book: null, sent: false, bErr: '' }),
+      stop: e => e.stopPropagation(),
+    };
+  }
+}
+</script>
+</body>
+</html>
